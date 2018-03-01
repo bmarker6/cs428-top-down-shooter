@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\bjami\.Rider2017.3\system\resharper-host\local\Transient\ReSharperHost\v11\SolutionCaches\_Basic Top Down Shooter.339124370.00" t="ExcludeRecursive" />
-    <e p="C:\Users\bjami\Documents\workspace\basicTopDownShooter\Basic Top Down Shooter" t="IncludeRecursive">
+    <e p="C:\Users\bjami\.Rider2017.3\system\resharper-host\local\Transient\ReSharperHost\v11\SolutionCaches\_TopDownShooter.630388244.00" t="ExcludeRecursive" />
+    <e p="C:\Users\bjami\Documents\workspace\topDownShooter\topDownShooter" t="IncludeRecursive">
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
@@ -20,13 +20,13 @@
           <e p="Shell.cs" t="Include" />
         </e>
       </e>
-      <e p="Basic Top Down Shooter.sln" t="IncludeFlat" />
       <e p="Library" t="ExcludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="Temp" t="ExcludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
       </e>
+      <e p="TopDownShooter.sln" t="IncludeFlat" />
     </e>
   </component>
 </project>
