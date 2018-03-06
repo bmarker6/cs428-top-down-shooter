@@ -15,29 +15,29 @@ public class Gun : MonoBehaviour
 	public GunType gunType;
 	public float rpm;
 
-	// Components
-	public Transform spawn;
+    //Same value as RPM, for restoring after ROF Buff
+    public float originalRPM;
+
+
+    // Components
+    public Transform spawn;
 	public Transform shellEjectionPoint;
 	public Rigidbody shell;
-	private LineRenderer tracer;
-	private AudioSource audio;
+	protected AudioSource audio;
+    public GameObject bullet;
 
-	// System variables
-	private float secondsBetweenShots;
-	private float nextPossibleShootTime;
+    // System variables
+    protected float secondsBetweenShots;
+	protected float nextPossibleShootTime;
 
 	void Start()
 	{
 		secondsBetweenShots = 60 / rpm;
-		if (GetComponent<LineRenderer>())
-		{
-			tracer = GetComponent<LineRenderer>();
-		}
 
 		audio = GetComponent<AudioSource>();
 	}
 
-	public void Shoot()
+	public virtual void Shoot()
 	{
 		if (CanShoot())
 		{
@@ -54,13 +54,10 @@ public class Gun : MonoBehaviour
 			nextPossibleShootTime = Time.time + secondsBetweenShots;
 
 			audio.Play();
+            Instantiate(bullet, spawn.transform.position, Quaternion.LookRotation(spawn.forward));
 
-			if (tracer)
-			{
-				StartCoroutine("RenderTracer", ray.direction * shotDistance);
-			}
-			
-			Rigidbody newShell = Instantiate(shell, shellEjectionPoint.position, Quaternion.identity) as Rigidbody;
+
+            Rigidbody newShell = Instantiate(shell, shellEjectionPoint.position, Quaternion.identity) as Rigidbody;
 			newShell.AddForce(shellEjectionPoint.right * Random.Range(150f, 200f) + spawn.right * Random.Range(-10f, 10f));
 		}
 	}
@@ -73,7 +70,7 @@ public class Gun : MonoBehaviour
 		}
 	}
 
-	private bool CanShoot()
+	protected bool CanShoot()
 	{
 		bool canShoot = true;
 
@@ -85,13 +82,16 @@ public class Gun : MonoBehaviour
 		return canShoot;
 	}
 
-	IEnumerator RenderTracer(Vector3 hitPoint)
-	{
-		tracer.enabled = true;
-		tracer.SetPosition(0, spawn.position);
-		tracer.SetPosition(1, spawn.position + hitPoint);
-		yield return null;
-		tracer.enabled = false;
-	}
 
+    private float ROFBuffTimer = 0;
+
+
+
+    // Rate Of Fire Buff Ability
+    public void IncreaseROF(float duration, float boost)
+    {
+        rpm = originalRPM + boost;
+        secondsBetweenShots = 60 / rpm;
+        ROFBuffTimer = duration;
+    }
 }
