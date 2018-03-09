@@ -49,7 +49,7 @@ public class Ability2 : MonoBehaviour {
     {
 
         audioSource.Play();
-        weapon.IncreaseROF(10, 300);
+        weapon.IncreaseROF(10, 2);
 
         ab2Timer = ab2CDTime;
 

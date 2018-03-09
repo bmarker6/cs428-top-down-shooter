@@ -101,7 +101,7 @@ public class Gun : MonoBehaviour
     // Rate Of Fire Buff Ability
     public void IncreaseROF(float duration, float boost)
     {
-        rpm = originalRPM + boost;
+        rpm = originalRPM * boost;
         secondsBetweenShots = 60 / rpm;
         ROFBuffTimer = duration;
     }

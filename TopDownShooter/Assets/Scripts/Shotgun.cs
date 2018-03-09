@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Shotgun : Gun {
 
-    private float maxSpread = 0.8f;
-    private float minSpread = 0.1f;
+    private float maxSpread = 0.35f;
+    private float minSpread = 0.0f;
 
     public override void Shoot()
     {
@@ -26,7 +26,7 @@ public class Shotgun : Gun {
             audio.Play();
 
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 7; i++)
             {
 
                 var randomSpreadX = Random.Range(minSpread, maxSpread);
@@ -36,7 +36,14 @@ public class Shotgun : Gun {
 
                 test = test + new Vector3(randomSpreadX, 0, randomSpreadZ);
 
-                Instantiate(bullet.transform, test, Quaternion.LookRotation(spawn.forward));
+                Quaternion BulletAngle = Quaternion.LookRotation(test - spawn.forward);
+
+                Quaternion BulletTravel = Quaternion.LookRotation(spawn.forward + (test - spawn.transform.position));
+
+
+                Quaternion BulletRotation = Quaternion.Lerp(Quaternion.LookRotation(spawn.forward), BulletAngle, Time.deltaTime);
+
+                Instantiate(bullet.transform, test, BulletTravel);
 
                 Debug.Log("Shot 1 bullet");
             }
