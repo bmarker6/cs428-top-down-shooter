@@ -30,7 +30,18 @@ public class Gun : MonoBehaviour
     protected float secondsBetweenShots;
 	protected float nextPossibleShootTime;
 
-	void Start()
+    private void Update()
+    {
+
+        ROFBuffTimer -= Time.deltaTime;
+        if (ROFBuffTimer <= 0)
+        {
+            rpm = originalRPM;
+            secondsBetweenShots = 60 / rpm;
+        }
+    }
+
+    void Start()
 	{
 		secondsBetweenShots = 60 / rpm;
 
