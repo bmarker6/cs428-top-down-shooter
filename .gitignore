@@ -1,2 +1,10 @@
 TopDownShooter/.idea
 TopDownShooter/Library/
+
+Library
+Temp
+*.sln
+*.csproj
+*.unityproj
+*.pidb
+*.userprefs
