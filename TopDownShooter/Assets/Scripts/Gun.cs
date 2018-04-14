@@ -5,93 +5,104 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class Gun : MonoBehaviour
 {
-	public enum GunType
-	{
-		Semi,
-		Burst,
-		Auto
-	}
+    public enum GunType
+    {
+        Semi,
+        Burst,
+        Auto
+    }
 
-	public GunType gunType;
-	public float rpm;
+    public GunType gunType;
+    public float rpm;
 
-	// Components
-	public Transform spawn;
-	public Transform shellEjectionPoint;
-	public Rigidbody shell;
-	private LineRenderer tracer;
-	private AudioSource audio;
+    //Same value as RPM, for restoring after ROF Buff
+    public float originalRPM;
 
-	// System variables
-	private float secondsBetweenShots;
-	private float nextPossibleShootTime;
 
-	void Start()
-	{
-		secondsBetweenShots = 60 / rpm;
-		if (GetComponent<LineRenderer>())
-		{
-			tracer = GetComponent<LineRenderer>();
-		}
+    // Components
+    public Transform spawn;
+    public Transform shellEjectionPoint;
+    public Rigidbody shell;
+    protected AudioSource audio;
+    public GameObject bullet;
 
-		audio = GetComponent<AudioSource>();
-	}
+    // System variables
+    protected float secondsBetweenShots;
+    protected float nextPossibleShootTime;
 
-	public void Shoot()
-	{
-		if (CanShoot())
-		{
-			Ray ray = new Ray(spawn.position, spawn.forward);
-			RaycastHit hit;
+    private void Update()
+    {
 
-			float shotDistance = 20;
+        ROFBuffTimer -= Time.deltaTime;
+        if (ROFBuffTimer <= 0)
+        {
+            rpm = originalRPM;
+            secondsBetweenShots = 60 / rpm;
+        }
+    }
 
-			if (Physics.Raycast(ray, out hit, shotDistance))
-			{
-				shotDistance = hit.distance;
-			}
+    void Start()
+    {
+        secondsBetweenShots = 60 / rpm;
 
-			nextPossibleShootTime = Time.time + secondsBetweenShots;
+        audio = GetComponent<AudioSource>();
+    }
 
-			audio.Play();
+    public virtual void Shoot()
+    {
+        if (CanShoot())
+        {
+            Ray ray = new Ray(spawn.position, spawn.forward);
+            RaycastHit hit;
 
-			if (tracer)
-			{
-				StartCoroutine("RenderTracer", ray.direction * shotDistance);
-			}
-			
-			Rigidbody newShell = Instantiate(shell, shellEjectionPoint.position, Quaternion.identity) as Rigidbody;
-			newShell.AddForce(shellEjectionPoint.right * Random.Range(150f, 200f) + spawn.right * Random.Range(-10f, 10f));
-		}
-	}
+            float shotDistance = 20;
 
-	public void ShootContinuous()
-	{
-		if (gunType == GunType.Auto)
-		{
-			Shoot();
-		}
-	}
+            if (Physics.Raycast(ray, out hit, shotDistance))
+            {
+                shotDistance = hit.distance;
+            }
 
-	private bool CanShoot()
-	{
-		bool canShoot = true;
+            nextPossibleShootTime = Time.time + secondsBetweenShots;
 
-		if (Time.time < nextPossibleShootTime)
-		{
-			canShoot = false;
-		}
-		
-		return canShoot;
-	}
+            audio.Play();
+            Instantiate(bullet, spawn.transform.position, Quaternion.LookRotation(spawn.forward));
 
-	IEnumerator RenderTracer(Vector3 hitPoint)
-	{
-		tracer.enabled = true;
-		tracer.SetPosition(0, spawn.position);
-		tracer.SetPosition(1, spawn.position + hitPoint);
-		yield return null;
-		tracer.enabled = false;
-	}
 
+            Rigidbody newShell = Instantiate(shell, shellEjectionPoint.position, Quaternion.identity) as Rigidbody;
+            newShell.AddForce(shellEjectionPoint.right * Random.Range(150f, 200f) + spawn.right * Random.Range(-10f, 10f));
+        }
+    }
+
+    public void ShootContinuous()
+    {
+        if (gunType == GunType.Auto)
+        {
+            Shoot();
+        }
+    }
+
+    protected bool CanShoot()
+    {
+        bool canShoot = true;
+
+        if (Time.time < nextPossibleShootTime)
+        {
+            canShoot = false;
+        }
+
+        return canShoot;
+    }
+
+
+    private float ROFBuffTimer = 0;
+
+
+
+    // Rate Of Fire Buff Ability
+    public void IncreaseROF(float duration, float boost)
+    {
+        rpm = originalRPM * boost;
+        secondsBetweenShots = 60 / rpm;
+        ROFBuffTimer = duration;
+    }
 }
