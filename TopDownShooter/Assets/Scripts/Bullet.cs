@@ -16,8 +16,6 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed);
         //transform.position += transform.forward * Time.deltaTime * bulletSpeed;
         currentLife += 1 * Time.deltaTime;
@@ -28,13 +26,13 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void OnCollisionEnter(Collision col)
     {
-        print("BULLET COLLISION! with " + other.name);
+//        print("BULLET COLLISION! with " + col.collider.name);
 
-        if (other.tag == "Enemy")
+        if (col.collider.tag == "Enemy")
         {
-            triggeringEnemy = other.gameObject;
+            triggeringEnemy = col.collider.gameObject;
             triggeringEnemy.GetComponent<BasicEnemy>().health -= damage;
             Destroy(this.gameObject);
         }

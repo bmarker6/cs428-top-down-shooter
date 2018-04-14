@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class BasicEnemy : MonoBehaviour
 {
-
-
     //Variables
     public float health = 3;
-
 
     //Methods
 
@@ -17,8 +14,7 @@ public class BasicEnemy : MonoBehaviour
     {
         if (health <= 0)
         {
-            Destroy(this.gameObject);
-            print("Enemy " + this.gameObject.name + " has died");
+//            print("Enemy " + this.gameObject.name + " has died");
             Destroy(this.gameObject);
         }
     }
